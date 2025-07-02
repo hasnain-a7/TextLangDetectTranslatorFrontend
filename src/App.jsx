@@ -17,8 +17,11 @@ function App() {
   ];
 
   const handleSubmit = async () => {
+    if (!text.trim()) return;
+
     setLoading(true);
     setResult(null);
+
     try {
       const response = await fetch(
         "https://textlangdetecttranslator.onrender.com/detect_translate",
@@ -36,30 +39,33 @@ function App() {
 
       const data = await response.json();
       setResult(data);
-    } catch (err) {
-      setResult({ error: err.message || "Something went wrong" });
+    } catch (error) {
+      setResult({ error: error.message || "Something went wrong" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F3F3F3] p-4">
-      <div className="w-full max-w-md bg-white rounded shadow-md p-6">
-        <h2 className="text-2xl font-bold text-center mb-4 text-[#4CAF50]">
+    <div className="min-h-screen flex items-center justify-center bg-gray-800 p-4">
+      <div className="w-full max-w-md bg-gray-700 rounded shadow-md p-6">
+        <h2 className="text-2xl font-bold text-center mb-4 text-white">
           Language Detector & Translator
         </h2>
 
         <div className="flex flex-col gap-4">
           <textarea
-            className="border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+            className="border border-gray-600 bg-gray-800 text-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
             placeholder="Enter text..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
           />
-
+          <h2 className="text-md font-bold: text-white">
+            Select Language for Translation:
+          </h2>
           <select
-            className="border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+            className="border border-gray-600 bg-gray-800 text-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
             value={targetLang}
             onChange={(e) => setTargetLang(e.target.value)}
           >
@@ -107,9 +113,9 @@ function App() {
           </button>
 
           {result && (
-            <div className="border border-gray-200 rounded p-3 bg-gray-50">
+            <div className="border border-gray-600 rounded p-3 bg-gray-800 text-gray-100">
               {result.error ? (
-                <p className="text-red-600">{result.error}</p>
+                <p className="text-red-400">{result.error}</p>
               ) : (
                 <>
                   <p>
